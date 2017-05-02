@@ -1,0 +1,17 @@
+The name| GOZ
+How many tokens in total do you need| 15,000,000
+How many tokens should be kept for founders| 10,000,000
+When will your ICO start| June 1, 2017
+How long will it last| 30 days 
+What is the cost for one token| $1:00
+What discounting mechanism do you want to use, the standard, or something else?
+	20%, 13,10 and 7%
+Keep all funds received
+
+An ERC20 compliant Ethereum token. This means that your token can be freely traded on any Ethereum exchange and there are many.
+Well commented and unit tested code.
+Code which adheres to the latest best practices and security features.
+Code which is uploaded on GitHub (if you choose)
+Code which is verified (if you choose). Verifying code means that you can be 100% sure that the source code matches the Smart Contract that is on the Ethereum network.
+A pricing mechanism according to your specifications.
+A tutorial document that your prospect can use to buy your tokens.
