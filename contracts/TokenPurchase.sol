@@ -9,21 +9,27 @@ import 'zeppelin/SafeMath.sol'; 				// safeMath
 /// @author Riaan F Venter~ RFVenter~ <msg@rfv.io>
 contract TokenPurchase is Ownable, Killable, SafeMath {
 
-	uint public constant startTime = 1493130600;         	// 2017 April 25th 9:30 EST (14:30 UTC)
-	uint public constant closeTime = startTime + 31 days;	// ICO will run for 31 days
-	uint public constant price = 33333333333333333;     	// Each token has 18 decimal places, just like ether.
-	uint private constant priceDayOne = price * 8 / 10;		// Day one price [20 % discount (x * 8 / 10)]
-	uint private constant priceDayTwo = price * 9 / 10;		// Day two price [10 % discount (x * 9 / 10)]
+	uint public constant startTime = 1496293200;        	// June 1, 2017 00:00 (UTC -5)
+	uint public constant closeTime = startTime + 30 days;	// ICO will run for 30 days
+	uint public constant price = 12500000000000000;     	// Each token has 18 decimal places, just like ether.
+	uint private constant priceWeekOne = price * 8 / 10;	// Day one price [20 % discount]
+	uint private constant priceWeekTwo = price * 87 / 100;	// Day two price [13 % discount]
+	uint private constant priceWeekThree = price * 9 / 10;	// Day two price [10 % discount]
+	uint private constant priceWeekFour = price * 93 / 100;	// Day two price [7 % discount]
 
-	ERC20 public token;							// the address of the token 
+	ERC20 public token;										// the address of the token 
 
-	// //// time test functionality /////
-	// uint public now;                //
-	//                                 //
-	// function setNow(uint _time) {   //
-	//     now = _time;                //
-	// }                               //
-	// //////////////////////////////////
+	//// time test functionality /////
+	uint public now;                //
+	                                //
+	function setNow(uint _time) {   //
+	    now = _time;                //
+	}                               //
+	//////////////////////////////////
+
+	function () payable {
+		purchaseTokens();
+	}
 
 	/// @notice Used to buy tokens with Ether
 	/// @return The amount of actual tokens purchased
@@ -33,24 +39,20 @@ contract TokenPurchase is Ownable, Killable, SafeMath {
 	    
 	    uint currentPrice;
 	    // only using safeMath for calculations involving external incoming data (to safe gas)
-	    if (now < (startTime + 1 days)) {       // day one discount
-	        currentPrice = priceDayOne;
-	    } 
-	    else if (now < (startTime + 2 days)) {  // day two discount
-	        currentPrice = priceDayTwo;
-	    }
-	    else if (now < (startTime + 12 days)) {
-	        // 1 % reduction in the discounted rate from day 2 until day 12 (sliding scale per second)
-	        currentPrice = price - ((startTime + 12 days - now) * price / 100 days);
-	    }
-	    else {
-	        currentPrice = price;
+	    if (now < (startTime + 7 days)) {       	// week one discount
+	        currentPrice = priceWeekOne;
+	    } else if (now < (startTime + 14 days)) {  	// week two discount
+	        currentPrice = priceWeekTwo;
+	    } else if (now < (startTime + 21 days)) {	// week three discount
+	        currentPrice = priceWeekThree;
+	    } else {									// week three discount
+	        currentPrice = priceWeekFour;			
 	    }
 	    uint tokens = safeMul(msg.value, 1 ether) / currentPrice;		// only one safeMath check is required for the incoming ether value
 
 	    if (!token.transferFrom(owner, msg.sender, tokens)) throw;		// if there is some error with the token transfer, throw and return the Ether
 
-	    return tokens;							// after successful purchase, return the amount of tokens purchased value
+	    return tokens;								// after successful purchase, return the amount of tokens purchased value
 	}
 
 	//////////////// owner only functions below
