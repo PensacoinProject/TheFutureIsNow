@@ -1,7 +1,7 @@
 pragma solidity ^0.4.8;
 
 import 'zeppelin/token/StandardToken.sol';      // ERC20 Standard Token interface
-import 'zeppelin/ownership/Ownable.sol';        // set specific function for owner only
+import 'better-zeppelin/ownership/Ownable.sol';        // set specific function for owner only
 
 /// @title GOZ Token
 /// @author Riaan F Venter~ RFVenter~ <msg@rfv.io>

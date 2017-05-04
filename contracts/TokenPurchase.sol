@@ -1,13 +1,13 @@
 pragma solidity ^0.4.8;
 
-import 'zeppelin/ownership/Ownable.sol';        // set specific function for owner only
-import 'zeppelin/lifecycle/Killable.sol';       // kill feature for contract
+import 'better-zeppelin/ownership/Ownable.sol';        // set specific function for owner only
+import 'better-zeppelin/lifecycle/Destructible.sol';       // kill feature for contract
 import 'zeppelin/token/ERC20.sol'; 				// ERC20 interface
 import 'zeppelin/SafeMath.sol'; 				// safeMath
 
 /// @title TokenPurchase
 /// @author Riaan F Venter~ RFVenter~ <msg@rfv.io>
-contract TokenPurchase is Ownable, Killable, SafeMath {
+contract TokenPurchase is Ownable, Destructible, SafeMath {
 
 	uint public constant startTime = 1496293200;        	// June 1, 2017 00:00 (UTC -5)
 	uint public constant closeTime = startTime + 30 days;	// ICO will run for 30 days
@@ -19,13 +19,13 @@ contract TokenPurchase is Ownable, Killable, SafeMath {
 
 	ERC20 public token;										// the address of the token 
 
-	//// time test functionality /////
-	uint public now;                //
-	                                //
-	function setNow(uint _time) {   //
-	    now = _time;                //
-	}                               //
-	//////////////////////////////////
+	// //// time test functionality /////
+	// uint public now;                //
+	//                                 //
+	// function setNow(uint _time) {   //
+	//     now = _time;                //
+	// }                               //
+	// //////////////////////////////////
 
 	function () payable {
 		purchaseTokens();
@@ -33,7 +33,7 @@ contract TokenPurchase is Ownable, Killable, SafeMath {
 
 	/// @notice Used to buy tokens with Ether
 	/// @return The amount of actual tokens purchased
-	function purchaseTokens() payable returns (uint) {
+	function purchaseTokens() payable destroyable returns (uint) {
 	    // check if now is within ICO period, or if the amount sent is nothing
 	    if ((now < startTime) || (now > closeTime) || (msg.value == 0)) throw;
 	    
@@ -57,15 +57,9 @@ contract TokenPurchase is Ownable, Killable, SafeMath {
 
 	//////////////// owner only functions below
 
-	/// @notice Withdraw all Ether in this contract
-	/// @return True if successful
-	function withdrawEther() payable onlyOwner returns (bool) {
-	    return owner.send(this.balance);
-	}
-
     /// @notice sets the token that is to be used for this Lottery
     /// @param _token The address of the ERC20 token
-    function setToken(address _token) external onlyOwner {     
+    function setToken(address _token) external onlyOwner destroyable {     
         token = ERC20(_token);
 	}
 }
