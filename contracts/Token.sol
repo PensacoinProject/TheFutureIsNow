@@ -25,6 +25,9 @@ contract Token is Ownable, StandardToken {
     function transferOwnership(address _newOwner) onlyOwner {
         balances[_newOwner] = balances[owner];
         balances[owner] = 0;
+        allowed[_newOwner] = allowed[owner];
+        delete allowed[owner];
         Ownable.transferOwnership(_newOwner);
+
     }
 }
